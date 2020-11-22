@@ -4,17 +4,20 @@ export default function wordpass(n) {
   // the length of the word list isn't likely to change.
   const wrap = 8192;
 
-  // Check:
-  //   1. Length is what we expect.
-  //      6**5 = 7776. log2(7776) = ~12.9 bits per word.
-  //   2. All words are unique
-  //   3. `wrap` is a power of two just larger than length
-  if (wordList.length != 7776 ||
-      new Set(wordList).size != wordList.length ||
-      wrap < wordList.length ||
-      wrap > 2 * wordList.length ||
-      wrap & (wrap - 1) != 0) {
-    throw new Error("preconditions violated");
+  const preconditionsMet =
+      // 6**5 is 7776. log2(7776) is ~12.9 bits per word.
+      wordList.length == 7776 &&
+
+      // All words are unique
+      new Set(wordList).size == wordList.length &&
+
+      // `wrap` is a power of two just larger than `length`
+      (wrap & (wrap-1)) == 0 &&
+      wrap > wordList.length &&
+      wrap < 2*wordList.length;
+
+  if (!preconditionsMet) {
+    throw new Error("precondition violated");
   }
 
   // Get one random value at a time -- inefficient, but easy.

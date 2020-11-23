@@ -43,7 +43,7 @@ export default function diceware(n) {
     }
   }
 
-  return randomWords.join(" ");
+  return randomWords;
 }
 
 // curl https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt | cut -f2 | sed -E 's/^/"/; s/$/", /'

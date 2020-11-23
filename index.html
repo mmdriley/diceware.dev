@@ -2,11 +2,14 @@
 <html>
   <head>
     <title>diceware</title>
+    <link rel="stylesheet" href="diceware.css">
   </head>
   <body>
+    <div id="password"></div>
     <script type="module">
       import diceware from './diceware.js';
-      document.body.appendChild(document.createTextNode(diceware(10)));
+      const container = document.getElementById("password");
+      container.appendChild(document.createTextNode(diceware(10).join(" ")));
     </script>
   </body>
 </html>

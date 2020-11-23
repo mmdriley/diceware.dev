@@ -1,0 +1,13 @@
+div#password {
+  padding-top: 0.5em;
+  padding-left: 1em;
+
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 200%;
+
+  line-height: 1.5em;
+
+  /* Force each word onto its own line. Avoids line breaks, which change how
+   * the password is copied. */
+  word-spacing: 90000em;
+}

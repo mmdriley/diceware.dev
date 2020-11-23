@@ -1,4 +1,4 @@
-export default function wordpass(n) {
+export default function diceware(n) {
   // Smallest power of two larger than word list length.
   // Hardcoded here -- and double-checked for correctness below -- because
   // the length of the word list isn't likely to change.

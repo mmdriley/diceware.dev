@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>diceware</title>
+    <link rel="stylesheet" href="diceware.css">
+  </head>
+  <body>
+    <div id="passwords" class="password"></div>
+    <script type="module">
+      import { generatePasswords } from './diceware.js';
+      const passwords = generatePasswords(16);
+      const container = document.getElementById("passwords");
+      for (const pw of passwords) {
+        container.appendChild(document.createTextNode(pw));
+        container.appendChild(document.createElement("br"));
+      }
+    </script>
+  </body>
+</html>
+<!-- https://github.com/mmdriley/diceware.dev -->

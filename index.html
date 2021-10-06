@@ -5,9 +5,9 @@
     <link rel="stylesheet" href="diceware.css">
   </head>
   <body>
-    <div id="password"></div>
+    <div id="password" class="password"></div>
     <script type="module">
-      import diceware from './diceware.js';
+      import { diceware } from './diceware.js';
       const container = document.getElementById("password");
       container.appendChild(document.createTextNode(diceware(10).join(" ")));
     </script>

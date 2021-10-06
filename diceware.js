@@ -1,49 +1,67 @@
-export default function diceware(n) {
-  // Smallest power of two larger than word list length.
-  // Hardcoded here -- and double-checked for correctness below -- because
-  // the length of the word list isn't likely to change.
-  const wrap = 8192;
-
-  const preconditionsMet =
-      // 6**5 is 7776. log2(7776) is ~12.9 bits per word.
-      wordList.length == 7776 &&
-
-      // All words are unique
-      new Set(wordList).size == wordList.length &&
-
-      // `wrap` is a power of two just larger than `length`
-      (wrap & (wrap-1)) == 0 &&
-      wrap > wordList.length &&
-      wrap < 2*wordList.length;
-
-  if (!preconditionsMet) {
-    throw new Error("precondition violated");
+export function chooseRandomWithReplacement(items, n) {
+  // Choose `wrap` as the smallest power at least as large as length.
+  let wrap = 1;
+  while (wrap < items.length) {
+    wrap *= 2;
   }
 
   // Get one random value at a time -- inefficient, but easy.
   let randomValues = new Uint32Array(1);
 
-  let randomWords = [];
-  while (randomWords.length < n) {
+  let chosenItems = [];
+  while (chosenItems.length < n) {
     // Fill the (one-element) array with random values.
     window.crypto.getRandomValues(randomValues);
 
     // Choose a candidate random index.
     //
-    // We can't just mod by the length of the word list, since it might not
-    // evenly divide the input range and we'd introduce bias where some words
-    // earlier in the list are more likely to be picked.
+    // We can't just mod by the number of items, since it might not evenly
+    // divide the input range and we'd introduce bias where items earlier in
+    // the list are more likely to be picked.
     //
     // Instead, we mod by `wrap`, chosen to be the power of two just larger
-    // than the length of the word list. If the index we choose is outside
-    // the array, we try again.
-    let randomWordIndex = randomValues[0] % wrap;
-    if (randomWordIndex < wordList.length) {
-      randomWords.push(wordList[randomWordIndex]);
+    // than the length of the list. If the index we choose is outside the
+    // array, we try again.
+    const randomIndex = randomValues[0] % wrap;
+    if (randomIndex < items.length) {
+      chosenItems.push(items[randomIndex]);
     }
   }
 
-  return randomWords;
+  return chosenItems;
+}
+
+export function diceware(n) {
+  const preconditionsMet =
+      // 6**5 is 7776. log2(7776) is ~12.9 bits per word.
+      wordList.length == 7776 &&
+
+      // All words are unique
+      new Set(wordList).size == wordList.length;
+
+  if (!preconditionsMet) {
+    throw new Error("precondition violated");
+  }
+
+  return chooseRandomWithReplacement(wordList, n);
+}
+
+// https://github.com/tytso/pwgen/blob/1459a31e07fa208cddb2c4f3f72071503c37b8bc/pw_rand.c#L16-L21
+const digits = "0123456789";
+const uppers = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const lowers = "abcdefghijklmnopqrstuvwxyz";
+const symbols = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+
+function generatePassword(charset, n) {
+  return chooseRandomWithReplacement(charset.split(''), n).join('');
+}
+
+export function generatePasswords(n) {
+  return [
+    generatePassword(lowers + uppers, n),
+    generatePassword(lowers + uppers + digits, n),
+    generatePassword(lowers + uppers + digits + symbols, n),
+  ];
 }
 
 // curl https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt | cut -f2 | sed -E 's/^/"/; s/$/", /'
